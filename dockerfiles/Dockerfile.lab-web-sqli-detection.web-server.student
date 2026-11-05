@@ -1,0 +1,29 @@
+FROM labtainers/labtainer.base2:latest
+
+ARG labdir
+ARG imagedir
+ARG lab
+
+RUN command -v python3 >/dev/null 2>&1 || \
+    (apt-get update -qq && \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y \
+     --no-install-recommends python3 && \
+     rm -rf /var/lib/apt/lists/*)
+
+ADD $labdir/sys_$lab.tar.gz /
+
+RUN id ubuntu >/dev/null 2>&1 || \
+    useradd -m -s /bin/bash ubuntu
+
+RUN install -d -o ubuntu -g ubuntu /home/ubuntu/web-lab
+
+ENV HOME=/home/ubuntu
+WORKDIR /home/ubuntu
+RUN systemctl enable web-sqli.service
+
+RUN install -d -o ubuntu -g ubuntu \
+    /home/ubuntu/.local/bin \
+    /home/ubuntu/.local/result \
+    /home/ubuntu/.local/zip
+
+LABEL version="3" base="labtainers/labtainer.base2.739eee77f8d3"

@@ -1,0 +1,14 @@
+[Unit]
+Description=SQL Injection Lab Web Server
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu
+ExecStart=/usr/bin/python3 /usr/local/bin/web_app.py
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
